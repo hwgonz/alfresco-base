@@ -1,7 +1,8 @@
 FROM tomcat:8.0
 MAINTAINER Howard Gonzalez <hwgonz@gmail.com>
-#RUN apt-get -qqy update \
-# && apt-get -qqy install git \
+RUN apt-get -qqy update \
+ && apt-get -qqy install apt-utils 
+RUN apt-get -qqy install ghostscript ImageMagick libreoffice
 #                         libcurl4-gnutls-dev \
 #                         libmcrypt-dev \
 #                         libpng12-dev \
@@ -18,14 +19,11 @@ MAINTAINER Howard Gonzalez <hwgonz@gmail.com>
 #                           zip \
   # Idiopathic rm failure; loop is workaround
 # && until rm -rf /var/lib/apt/lists; do sleep 1; done
-ADD http://mirrors-usa.go-parts.com/mirrors/ImageMagick/ImageMagick-6.9.1-3.tar.gz /ImageMagick/ImageMagick-6.9.1-3.tar.gz
-WORKDIR /ImageMagick
-RUN gzip -dc /ImageMagick/ImageMagick-6.9.1-3.tar.gz | tar -xf -
-ENV PATH /ImageMagick/bin:$PATH
+
 COPY catalina.properties /usr/local/tomcat/conf/catalina.properties
 COPY shared /usr/local/tomcat/shared
 COPY postgresql-9.3-1102-jdbc41.jar /usr/local/tomcat/shared/lib/postgresql-9.3-1102-jdbc41.jar
 COPY server.xml /usr/local/tomcat/conf/server.xml
-RUN rm -f /ImageMagick/ImageMagick-6.9.1-3.tar.gz
+
 #CMD ["/usr/local/sbin/php-fpm", "-y", "/etc/php5/fpm/php-fpm.conf"]
 #EXPOSE 9001
